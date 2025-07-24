@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encuesta - Numia Data Models</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url('https://www.ecoticias.com/wp-content/uploads/2023/07/Picture-ICTA-UAB-1.jpg') center 25%/cover no-repeat fixed;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 30%, rgba(0, 0, 0, 0.2) 60%, rgba(0, 0, 0, 0) 100%);
+            z-index: -1;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .header {
+            background: transparent;
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+            width: 100%;
+            margin: 0;
+            margin-bottom: 20px;
+        }
+
+        .header > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Logo mágico estilo esfera de cristal */
+        .magical-logo {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, 
+                rgba(255, 255, 255, 0.9) 0%, 
+                rgba(255, 255, 255, 0.3) 30%, 
+                rgba(255, 255, 255, 0.1) 60%, 
+                transparent 100%);
+            box-shadow: 
+                0 0 30px rgba(255, 215, 0, 0.6),
+                inset 0 0 20px rgba(255, 255, 255, 0.3),
+                0 0 50px rgba(34, 139, 34, 0.4);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .magical-logo::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(ellipse at center,
+                rgba(255, 215, 0, 0.9) 0%,
+                rgba(255, 215, 0, 0.7) 30%,
+                rgba(34, 139, 34, 0.8) 60%,
+                rgba(34, 139, 34, 0.4) 100%);
+            border-radius: 50%;
+            box-shadow: 
+                0 0 20px rgba(255, 215, 0, 0.8),
+                0 0 40px rgba(34, 139, 34, 0.6);
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+
+        .magical-logo::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            z-index: 2;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.8));
+            animation: float 4s ease-in-out infinite;
+            background-image: url("data:image/svg+xml,%3Csvg width='1044' height='1090' viewBox='0 0 1044 1090' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 538C1.21031e-05 395.313 54.9963 258.471 152.89 157.577C250.784 56.682 383.557 1.5308e-05 522 0C660.443 -1.5308e-05 793.216 56.6819 891.11 157.576C989.004 258.471 1044 395.313 1044 538L986.517 538C986.517 411.026 937.577 289.253 850.463 199.469C763.349 109.685 645.197 59.2453 522 59.2453C398.802 59.2453 280.651 109.685 193.537 199.469C106.423 289.253 57.4833 411.026 57.4833 538L0 538Z' fill='%2388B753'/%3E%3Cpath d='M573.187 496.312L554.574 417L584.136 467.576L605.487 496.312L637.24 536.542C650.561 541.332 680.16 552.749 691.985 560.106C703.81 567.462 737.424 569.301 752.753 569.301L831.039 585.968C851.66 589.417 895.092 597.578 903.851 602.635C912.61 607.693 957.137 621.218 978.305 627.348L1044 662.981L1025.39 714.706C1016.81 736.354 998.671 782.294 994.729 792.868C990.787 803.443 970.823 830.225 961.334 842.295L925.202 893.445L874.288 949.193L806.404 1004.94L743.994 1044.02L658.59 1075.63L573.187 1090H479.025L394.716 1075.63L310.408 1044.02L232.122 1004.94L166.427 949.193L112.776 893.445L62.4101 825.628L18.6135 738.27L0 662.981L39.9643 643.441L82.1185 627.348L131.39 609.532L209.676 585.968L310.408 569.301L362.416 550.91L419.352 522.174L453.842 477.921L486.142 417C480.85 436.349 469.718 476.656 467.528 483.093C464.791 491.139 450.009 519.301 450.009 527.347C450.009 535.393 428.111 554.933 424.279 560.106C421.213 564.244 403.293 585.968 394.716 596.313L374.46 643.441L354.752 689.993L342.16 749.764L354.752 802.064L374.46 850.341L414.425 893.445L450.009 920.457L512.419 931.951L573.187 920.457C590.158 911.836 626.728 892.525 637.24 884.249C650.379 873.904 668.445 859.536 668.445 850.341C668.445 841.145 691.985 810.11 691.985 792.868C691.985 775.627 693.08 722.752 691.985 714.706C690.89 706.66 677.204 668.154 668.445 653.786C661.437 642.291 651.656 619.494 647.641 609.532L613.699 569.301L573.187 496.312Z' fill='%23014E3A'/%3E%3Cpath d='M555 248L538 265V231.5L535 205.5V185L531.5 166L526.5 151.5L519.5 166L514 185V205.5V231.5V265L502 256L490.5 238L479.5 220L476 197V173L479.5 151.5L486 128.5L498 107.5L510 92.5L523.5 84L538 92.5L550 107.5L561 128.5L571 151.5V173V197L566 225L555 248Z' fill='%2389B64F'/%3E%3Cpath d='M596.5 366.5L578.5 374.5H574.5L581 363.5L587.5 352L593.5 340L601.5 329L611.5 316L623 305.5L634 296L643.5 284H636.5H623L611.5 289L599.5 296C596.5 299.167 589.9 306 587.5 308C585.1 310 580.5 314.167 578.5 316L569.5 330L561.5 345L548 374.5L551 352C552 346.333 554.1 334 554.5 330C554.9 326 557 319 558 316C560 311.167 564.4 300.4 566 296C567.6 291.6 570.667 286.167 572 284L578.5 275.5C582.833 271.5 591.9 263.2 593.5 262C595.5 260.5 605 252.5 607.5 252.5C609.5 252.5 616 249.167 619 247.5L640 244L662 239.5H682.5C689.667 240.833 705.2 243.6 710 244C714.8 244.4 727 249.833 732.5 252.5L745 256C744.167 261.167 742.1 272.3 740.5 275.5C738.9 278.7 737.833 285.833 737.5 289C735.5 293 731.1 301.9 729.5 305.5C727.5 310 720 320 716 324.5C712 329 706.5 334 704 337.5C702 340.3 697.5 345.333 695.5 347.5L682.5 356L669.5 361.5H648.5H634H619H605L596.5 366.5Z' fill='%2389B64F'/%3E%3Cpath d='M451.777 366.5L470.416 374.5H474.558L467.827 363.5L461.096 352L454.883 340L446.599 329L436.244 316L424.335 305.5L412.944 296L403.107 284H410.355H424.335L436.244 289L448.67 296C451.777 299.167 458.611 306 461.096 308C463.582 310 468.345 314.167 470.416 316L479.736 330L488.02 345L502 374.5L498.893 352C497.858 346.333 495.683 334 495.269 330C494.855 326 492.68 319 491.645 316C489.574 311.167 485.017 300.4 483.36 296C481.704 291.6 478.528 286.167 477.147 284L470.416 275.5C465.929 271.5 456.54 263.2 454.883 262C452.812 260.5 442.975 252.5 440.386 252.5C438.315 252.5 431.584 249.167 428.477 247.5L406.731 244L383.949 239.5H362.721C355.299 240.833 339.214 243.6 334.244 244C329.273 244.4 316.64 249.833 310.944 252.5L298 256C298.863 261.167 301.003 272.3 302.66 275.5C304.317 278.7 305.421 285.833 305.767 289C307.838 293 312.394 301.9 314.051 305.5C316.122 310 323.888 320 328.03 324.5C332.173 329 337.868 334 340.457 337.5C342.528 340.3 347.188 345.333 349.259 347.5L362.721 356L376.183 361.5H397.929H412.944H428.477H442.975L451.777 366.5Z' fill='%2389B64F'/%3E%3Cellipse cx='522' cy='735' rx='60' ry='62' fill='url(%23paint0_radial_712_775)'/%3E%3Cdefs%3E%3CradialGradient id='paint0_radial_712_775' cx='0' cy='0' r='1' gradientUnits='userSpaceOnUse' gradientTransform='translate(522 735) rotate(90) scale(62 60)'%3E%3Cstop stop-color='%23FFFB02'/%3E%3Cstop offset='0.3125' stop-color='%23905508'/%3E%3Cstop offset='0.394231' stop-color='%23905508'/%3E%3Cstop offset='1' stop-color='%23FFAE00'/%3E%3C/radialGradient%3E%3C/defs%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        @keyframes glow {
+            0% { 
+                box-shadow: 
+                    0 0 20px rgba(255, 215, 0, 0.8),
+                    0 0 40px rgba(34, 139, 34, 0.6);
+            }
+            100% { 
+                box-shadow: 
+                    0 0 30px rgba(255, 215, 0, 1),
+                    0 0 60px rgba(34, 139, 34, 0.8),
+                    0 0 80px rgba(255, 215, 0, 0.4);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(-50%, -50%) translateY(0px); }
+            50% { transform: translate(-50%, -50%) translateY(-5px); }
+        }
+
+        /* Partículas mágicas alrededor del logo */
+        .magical-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.8) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: sparkle 2s linear infinite;
+        }
+
+        .particle:nth-child(1) { top: 20%; left: 20%; animation-delay: 0s; }
+        .particle:nth-child(2) { top: 30%; right: 25%; animation-delay: 0.5s; }
+        .particle:nth-child(3) { bottom: 30%; left: 30%; animation-delay: 1s; }
+        .particle:nth-child(4) { bottom: 20%; right: 20%; animation-delay: 1.5s; }
+        .particle:nth-child(5) { top: 50%; left: 10%; animation-delay: 0.3s; }
+        .particle:nth-child(6) { top: 50%; right: 10%; animation-delay: 0.8s; }
+
+        @keyframes sparkle {
+            0%, 100% { 
+                opacity: 0; 
+                transform: scale(0) rotate(0deg);
+            }
+            50% { 
+                opacity: 1; 
+                transform: scale(1) rotate(180deg);
+            }
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .header .subtitle {
+            font-size: 1.4em;
+            font-weight: 600;
+            margin: 15px 0 10px 0;
+            color: #a8e6a8;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .header .tagline {
+            font-size: 1em;
+            font-style: italic;
+            opacity: 0.8;
+            line-height: 1.4;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        /* Estilos para la estructura de 3 filas */
+        .first-row {
+            margin-bottom: 30px;
+        }
+
+        /* Estilos para la sección "¿Qué es Movimiento Semilla?" */
+        .what-is-container {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .what-is-container h2 {
+            color: #2d5a2d;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            font-weight: 600;
+        }
+
+        .what-is-container p {
+            color: #3a5a3a;
+            line-height: 1.8;
+            font-size: 1.1em;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Estilos para la sección "¿En qué consiste?" */
+        .second-row-consists {
+            margin-bottom: 30px;
+        }
+
+        .consists-container {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .consists-container h2 {
+            color: #2d5a2d;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .consists-intro {
+            color: #3a5a3a;
+            font-size: 1.2em;
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+
+                          .phases-tabs {
+              width: 100%;
+              background: white;
+              border-radius: 10px;
+              box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+              overflow: hidden;
+          }
+
+         .tabs-nav {
+             display: flex;
+             background: #2d5a2d;
+             padding: 5px 5px 0;
+             gap: 2px;
+         }
+
+         .tab-btn {
+             flex: 1;
+             background: rgba(255, 255, 255, 0.1);
+             color: white;
+             border: none;
+             padding: 15px 10px;
+             cursor: pointer;
+             display: flex;
+             align-items: center;
+             gap: 10px;
+             font-size: 1em;
+             font-weight: 500;
+             transition: all 0.3s ease;
+             border-radius: 10px 10px 0 0;
+         }
+
+         .tab-btn:hover {
+             background: rgba(255, 255, 255, 0.2);
+         }
+
+         .tab-btn.active {
+             background: white;
+             color: #2d5a2d;
+         }
+
+         .phase-number {
+             background: rgba(74, 154, 74, 0.2);
+             color: inherit;
+             width: 24px;
+             height: 24px;
+             border-radius: 50%;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             font-weight: bold;
+             font-size: 0.9em;
+         }
+
+         .tab-btn.active .phase-number {
+             background: rgba(74, 154, 74, 0.3);
+         }
+
+         .phase-title {
+             flex: 1;
+             font-weight: 600;
+             text-align: center;
+         }
+
+         .tab-content {
+             display: none;
+             background: white;
+             padding: 30px;
+         }
+
+         .tab-content.active {
+             display: block;
+         }
+
+         .tab-content p {
+             color: #3a5a3a;
+             line-height: 1.6;
+             margin: 0 0 30px 0;
+             font-size: 1.1em;
+             text-align: center;
+         }
+
+                   .tab-content .third-row-columns {
+              margin-top: 40px;
+              border-top: 2px solid #e8f5e8;
+              padding-top: 40px;
+              max-width: 1200px;
+              margin-left: auto;
+              margin-right: auto;
+          }
+
+        .third-row-columns {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .fourth-row {
+            text-align: center;
+            padding: 20px 0;
+            border-top: 2px solid #e8f5e8;
+        }
+
+        /* Estilos para los contenedores de cada columna */
+        .steps-container {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            height: 100%;
+        }
+
+        .steps-container h3 {
+            color: #2d5a2d;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            text-align: center;
+        }
+
+        .info-container {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            height: 100%;
+        }
+
+        .info-container h3 {
+            color: #2d5a2d;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            text-align: center;
+        }
+
+        .info-content p {
+            color: #3a5a3a;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .benefits-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .benefits-list li {
+            color: #3a5a3a;
+            padding: 8px 0;
+            border-bottom: 1px solid #e8f5e8;
+            line-height: 1.4;
+        }
+
+        .benefits-list li:last-child {
+            border-bottom: none;
+        }
+
+        .intro-text {
+            background: linear-gradient(135deg, #f0f8f0 0%, #e8f5e8 100%);
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+        }
+
+        .intro-text h2 {
+            color: #2d5a2d;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .intro-text p {
+            color: #3a5a3a;
+            line-height: 1.6;
+        }
+
+        /* Estilos para la sección de misión */
+        .mission-text {
+            background: white;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .mission-text h2 {
+            color: #2d5a2d;
+            margin-bottom: 20px;
+            font-size: 1.6em;
+            text-align: center;
+        }
+
+        .mission-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .mission-highlight {
+            background: #2d5a2d;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .mission-description {
+            color: #2d5a2d;
+            font-size: 1.2em;
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+
+        .mission-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .step {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .step:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            background: #2d5a2d;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .step p {
+            color: #3a5a3a;
+            line-height: 1.6;
+            margin: 0;
+            padding-left: 10px;
+        }
+
+        .step p:first-of-type {
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .step-note {
+            color: #666 !important;
+            font-style: italic;
+            font-size: 0.95em;
+            margin-top: 5px !important;
+        }
+
+        .survey-container {
+            background: #f8fdf8;
+            border: 2px solid #4a9a4a;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .survey-container.show {
+            display: block;
+        }
+
+        .show-survey-btn {
+            background: #2d5a2d;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            border-radius: 25px;
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .show-survey-btn:hover {
+            background: #1f3f1f;
+            transform: translateY(-2px);
+        }
+
+        .show-survey-btn:active {
+            transform: translateY(0);
+        }
+
+        .survey-container h3 {
+            color: #2d5a2d;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        /* Estilos para el iframe de SurveyMonkey */
+        .survey-iframe {
+            width: 100%;
+            min-height: 600px;
+            border: none;
+            border-radius: 8px;
+            background: white;
+        }
+
+        .footer {
+            background: #2d5a2d;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9em;
+        }
+
+        .footer a {
+            color: #a8e6a8;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                margin: 15px auto;
+                border-radius: 10px;
+            }
+
+            .header {
+                padding: 30px 15px;
+            }
+
+            .magical-logo {
+                width: 80px;
+                height: 80px;
+                margin-bottom: 15px;
+            }
+
+            .magical-logo::before {
+                width: 40px;
+                height: 40px;
+            }
+
+            .magical-logo::after {
+                font-size: 20px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .header .subtitle {
+                font-size: 1.2em;
+            }
+
+            .header .tagline {
+                font-size: 0.9em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .survey-iframe {
+                min-height: 500px;
+            }
+
+            .mission-text {
+                padding: 20px 15px;
+                margin: 20px 0;
+            }
+
+            .mission-highlight {
+                font-size: 1.1em;
+                padding: 15px;
+            }
+
+            .mission-description {
+                font-size: 1.1em;
+            }
+
+            .step {
+                padding: 15px;
+            }
+
+            .step-number {
+                width: 25px;
+                height: 25px;
+                font-size: 1em;
+            }
+
+            /* Responsive para la estructura de 3 filas */
+            .first-row {
+                margin-bottom: 20px;
+            }
+
+            .what-is-container {
+                padding: 20px 15px;
+            }
+
+            .what-is-container h2 {
+                font-size: 1.5em;
+            }
+
+            .what-is-container p {
+                font-size: 1em;
+                line-height: 1.6;
+            }
+
+                         .consists-container {
+                 padding: 20px 15px;
+             }
+
+             .consists-container h2 {
+                 font-size: 1.5em;
+             }
+
+             .consists-intro {
+                 font-size: 1.1em;
+             }
+
+             .tabs-nav {
+                 flex-wrap: wrap;
+                 padding: 5px;
+             }
+
+             .tab-btn {
+                 flex: 1 1 calc(50% - 4px);
+                 font-size: 0.9em;
+                 padding: 10px 8px;
+             }
+
+             .phase-number {
+                 width: 20px;
+                 height: 20px;
+                 font-size: 0.8em;
+             }
+
+             .phase-title {
+                 font-size: 0.9em;
+             }
+
+             .tab-content {
+                 padding: 20px 15px;
+             }
+
+             .tab-content p {
+                 font-size: 1em;
+                 line-height: 1.5;
+             }
+
+            .third-row-columns {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .column {
+                width: 100%;
+            }
+
+            .steps-container,
+            .info-container {
+                padding: 20px 15px;
+            }
+
+            .steps-container h3,
+            .info-container h3 {
+                font-size: 1.2em;
+            }
+        }
+
+        /* Responsive design para el botón */
+        @media (max-width: 768px) {
+            .show-survey-btn {
+                padding: 12px 25px;
+                font-size: 1em;
+                margin: 15px auto;
+            }
+        }
+
+        /* Ajustes de colores para mejor legibilidad */
+        .what-is-container p,
+        .consists-container p,
+        .tab-content p,
+        .step p,
+        .info-content p {
+            color: #1a331a;
+            line-height: 1.8;
+        }
+
+        .benefits-list li {
+            color: #1a331a;
+            padding: 10px 0;
+        }
+
+        .mission-description {
+            color: #1a331a;
+        }
+
+        .mission-highlight {
+            background: #2d5a2d;
+            color: white;
+            font-weight: 500;
+        }
+
+        .header .subtitle {
+            color: #ffffff;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .header .tagline {
+            color: #ffffff;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+        }
+    </style>
+
+    <script>
+        function showSurvey() {
+            console.log('Función showSurvey ejecutada');
+            
+            const surveyContainer = document.getElementById('surveyContainer');
+            const button = document.querySelector('.show-survey-btn');
+            
+            console.log('surveyContainer:', surveyContainer);
+            console.log('button:', button);
+            
+            if (surveyContainer && button) {
+                surveyContainer.classList.add('show');
+                button.style.display = 'none';
+                
+                console.log('Clase show agregada, botón oculto');
+                
+                // Scroll suave hacia la encuesta
+                setTimeout(() => {
+                    surveyContainer.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'start' 
+                    });
+                }, 100);
+            } else {
+                console.error('No se encontraron los elementos necesarios');
+            }
+        }
+
+                 // Función para cambiar entre pestañas
+         function switchTab(tabNumber) {
+             // Desactivar todas las pestañas y contenidos
+             document.querySelectorAll('.tab-btn').forEach(btn => {
+                 btn.classList.remove('active');
+             });
+             document.querySelectorAll('.tab-content').forEach(content => {
+                 content.classList.remove('active');
+             });
+             
+             // Activar la pestaña y contenido seleccionados
+             document.querySelector(`.tab-btn:nth-child(${tabNumber})`).classList.add('active');
+             document.querySelector(`#tab-${tabNumber}`).classList.add('active');
+         }
+
+        // Asegurar que el DOM esté cargado
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM cargado');
+            
+            // Agregar event listener alternativo al botón
+            const button = document.querySelector('.show-survey-btn');
+            if (button) {
+                button.addEventListener('click', showSurvey);
+                console.log('Event listener agregado al botón');
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="magical-logo">
+                <div class="magical-particles">
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                </div>
+            </div>
+            <h1>Movimiento Semilla</h1>
+            <p class="subtitle">Visibilizando las oportunidades Rurales</p>
+            <p class="tagline">Conectando con saberes rurales y sembrando riqueza social. De un juego de mesa a vidas rurales en juego.</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="content">
+            <!-- Primera fila - ¿Qué es Movimiento Semilla? -->
+            <div class="first-row">
+                <div class="what-is-container">
+                    <h2>¿Qué es Movimiento Semilla?</h2>
+                    <p>
+                        Movimiento Semilla es un proyecto que busca conectar a la gente de nuevo con las raíces rurales de España, 
+                        dando visibilidad a los problemas y maravillas del día a día del campo, colaborando con agricultores 
+                        y ganaderos, y creando una comunidad que gire alrededor de todo ello.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Segunda fila - ¿En qué consiste? -->
+            <div class="second-row-consists">
+                <div class="consists-container">
+                    <h2>¿En qué consiste?</h2>
+                    <p class="consists-intro">El proyecto está formado por 5 fases:</p>
+                    
+                    <div class="phases-tabs">
+                        <div class="tabs-nav">
+                            <button class="tab-btn active" onclick="switchTab(1)">
+                                <span class="phase-number">i</span>
+                                <span class="phase-title">La Semilla</span>
+                                <span style="margin-left: 5px;">✨</span>
+                            </button>
+                            <button class="tab-btn" onclick="switchTab(2)">
+                                <span class="phase-number">ii</span>
+                                <span class="phase-title">La Comarca</span>
+                                <span style="margin-left: 5px;">🔒</span>
+                            </button>
+                            <button class="tab-btn" onclick="switchTab(3)">
+                                <span class="phase-number">iii</span>
+                                <span class="phase-title">Comunidad</span>
+                                <span style="margin-left: 5px;">🔒</span>
+                            </button>
+                            <button class="tab-btn" onclick="switchTab(4)">
+                                <span class="phase-number">iv</span>
+                                <span class="phase-title">Bosque Sabio</span>
+                                <span style="margin-left: 5px;">🔒</span>
+                            </button>
+                            <button class="tab-btn" onclick="switchTab(5)">
+                                <span class="phase-number">v</span>
+                                <span class="phase-title">Fase 5</span>
+                                <span style="margin-left: 5px;">🔒</span>
+                            </button>
+                        </div>
+                        
+                                                 <div class="tab-content active" id="tab-1">
+                             <p>Un juego de mesa que busca transmitir conceptos y situaciones del mundo rural con el fin de adquirir fondos que permitan continuar con el resto del proyecto.</p>
+                             
+                             <div class="third-row-columns">
+                                <div class="column">
+                                    <div class="mission-text">
+                                        <h2>🌱 Nuestra Misión</h2>
+                                        <div class="mission-content">
+                                            <p class="mission-highlight">
+                                                "Crear el primer juego de mesa en España,<br>
+                                                que da visibilidad al medio rural real."
+                                            </p>
+                                            <p class="mission-description">
+                                                Para eso, necesitamos tu aportación.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="column">
+                                    <div class="steps-container">
+                                        <h3>📋 Nuestro Plan</h3>
+                                        <div class="mission-steps">
+                                            <div class="step">
+                                                <span class="step-number">1</span>
+                                                <p>Crear las primeras 100 unidades del <strong>Prototipo 1</strong> para hacer una campaña de publicidad.</p>
+                                                <p class="step-note">(de la que te aseguro, que vas a querer formar parte)</p>
+                                            </div>
+                                            <div class="step">
+                                                <span class="step-number">2</span>
+                                                <p>Recibir feedback y crear el <strong>Prototipo 2</strong>.</p>
+                                            </div>
+                                            <div class="step">
+                                                <span class="step-number">3</span>
+                                                <p>Para en 2026/2027 crear el <strong>Prototipo 3</strong> y la primera edición comercial.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="column">
+                                    <div class="info-container">
+                                        <h3>💡 ¿Por qué participar?</h3>
+                                        <div class="info-content">
+                                            <p>Tu opinión es fundamental para crear un juego que realmente conecte con la realidad rural española.</p>
+                                            <ul class="benefits-list">
+                                                <li>🎯 Serás parte del desarrollo desde el inicio</li>
+                                                <li>🌾 Contribuirás a visibilizar el medio rural</li>
+                                                <li>🎮 Tendrás acceso prioritario a los prototipos</li>
+                                                <li>🤝 Formarás parte de una comunidad comprometida</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                         </div>
+                        <div class="tab-content" id="tab-2">
+                            <p>Colaboración con agricultores de 10 pueblos del este de España, con los que generaremos contenido, apoyando con reformas necesarias y actividades.</p>
+                        </div>
+                        <div class="tab-content" id="tab-3">
+                            <p>Creación de una plataforma que permita a los miembros del proyecto conectar con los agricultores de múltiples maneras, como adquiriendo productos de primera mano o invirtiendo en ellos recibiendo compensaciones.</p>
+                        </div>
+                        <div class="tab-content" id="tab-4">
+                            <p>Los ingresos que se generen a través del proyecto buscan la creación de un vehículo financiero con la finalidad de regenerar la España rural, invirtiendo en productores y potenciando todas las áreas de Movimiento Semilla.</p>
+                        </div>
+                        <div class="tab-content" id="tab-5">
+                            <p>Contenido pendiente para la quinta fase del proyecto.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                         <!-- Fila con el botón -->
+            <div class="fourth-row">
+                <button class="show-survey-btn" onclick="showSurvey()">
+                    💡 ¡Quiero saber más!
+                </button>
+            </div>
+
+            <div class="survey-container" id="surveyContainer">
+                <h3>📋 Encuesta de Satisfacción</h3>
+                <!-- Aquí puedes reemplazar el src con tu URL real de SurveyMonkey -->
+                <iframe 
+                    class="survey-iframe"
+                    src="https://www.surveymonkey.com/r/YOUR_SURVEY_ID"
+                    title="Encuesta de Satisfacción">
+                    <p>Tu navegador no soporta iframes. 
+                    <a href="https://www.surveymonkey.com/r/YOUR_SURVEY_ID" target="_blank">
+                        Haz clic aquí para abrir la encuesta en una nueva ventana
+                    </a>.</p>
+                </iframe>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2024 Movimiento Semilla. Todos los derechos reservados.</p>
+            <p>
+                <a href="mailto:contact@numia.com">Contacto</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html> 
